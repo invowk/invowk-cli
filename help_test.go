@@ -1,0 +1,176 @@
+package main
+
+import (
+	"fmt"
+	"github.com/Netflix/go-expect"
+	"github.com/cucumber/godog"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"regexp"
+	"strings"
+	"testing"
+	"time"
+)
+
+const (
+	timeout = 4 * time.Second
+	helpRaw = `invowk is a code execution & sharing engine exposed as an user-extensible CLI.
+
+Why is it an 'execution engine'?
+Because invowk helps you run code/scripts encapsulated as custom user-made 
+commands! Such commands can be written as/in:
+- shell scripts (e.g.: bash, zsh, cmd, powershell)
+- dynamic languages (e.g.: python, js/node.js, ruby)
+- compiled languages (e.g.: java, go, rust, c/c++)
+They can be run against the host machine or a Docker container, all in the
+most seamless fashion.
+
+Why is it a 'sharing engine'?
+Because invowk helps you import/export custom user-made commands so that you
+can easily run other people's code/automations/ideas and vice-versa!
+We even have several curated custom commands that you can try out-of-the-box.
+
+Why is it an 'user-extensible CLI'?
+Because invowk is a kind of 'meta-CLI': it is designed so that its users can 
+extend it with custom commands that add the real value to the CLI and invowk
+ecosystem! It also makes receiving (via flags or fancy interactive prompts)
+and validating inputs a complete breeze.
+
+Usage:
+  invowk [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  config      A brief description of your command
+  help        Help about any command
+
+Flags:
+      --config string   config file (default is $HOME/.config/invowk/invowk.toml)
+  -h, --help            help for invowk
+  -t, --toggle          Help message for toggle
+`
+)
+
+type TestRunner struct {
+	console *expect.Console
+	cmd     *exec.Cmd
+}
+
+func (t *TestRunner) anOpenTTY() error {
+	c, err := expect.NewConsole(expect.WithStdout(os.Stdout))
+	if err != nil {
+		return err
+	}
+
+	t.console = c
+	return nil
+}
+
+func (t *TestRunner) iSuccessfullyRun(arg1 string) error {
+	cmd := exec.Command("./invowk", arg1)
+	cmd.Stdin = t.console.Tty()
+	cmd.Stdout = t.console.Tty()
+	cmd.Stderr = t.console.Tty()
+
+	err := cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	t.cmd = cmd
+	return nil
+}
+
+func (t *TestRunner) theTUIOutputShouldContainTheContentFromWhichRendersTo(arg1 string, arg2 *godog.DocString) error {
+	content, err := ioutil.ReadFile("features/data/" + arg1)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var expectedPattern = regexp.QuoteMeta(string(content))
+	expectedPattern = regexp.MustCompile("\n").ReplaceAllString(expectedPattern, " *\r*\n")
+	expectedRegexPattern := regexp.MustCompile("\r*\n*" + expectedPattern)
+
+	out, err := t.console.Expect(
+		expect.Regexp(expectedRegexPattern),
+		expect.WithTimeout(timeout))
+
+	if err != nil {
+		fmt.Println(out)
+		return err
+	}
+
+	return nil
+}
+
+func (t *TestRunner) theTerminalOutputShouldContain(arg1 *godog.DocString) error {
+	//result = strings.ReplaceAll(result, "\r", "")
+	//result = strings.ReplaceAll(result, " +\n+", "\n")
+	//result = regexp.MustCompile(" +\n").ReplaceAllString(result, "\n")
+	//result = regexp.MustCompile(" +\r").ReplaceAllString(result, "\n")
+
+	var expectedPattern = regexp.QuoteMeta(arg1.Content)
+	//expectedPattern = strings.ReplaceAll(arg1.Content, "\r", "")
+	//expectedPattern = regexp.MustCompile("\r").ReplaceAllString(expectedPattern, " *\r")
+	expectedPattern = regexp.MustCompile("\n").ReplaceAllString(expectedPattern, " *\r*\n")
+	expectedRegexPattern := regexp.MustCompile("\r*\n*" + expectedPattern)
+
+	out, err := t.console.Expect(
+		expect.Regexp(expectedRegexPattern),
+		expect.WithTimeout(timeout))
+
+	//arg1.Content = strings.ReplaceAll(arg1.Content, "\r", "")
+	arg1.Content = strings.ReplaceAll(arg1.Content, " +\n", "\n")
+	//arg1.Content = regexp.MustCompile(" +\n").ReplaceAllString(arg1.Content, "\n")
+	//arg1.Content = regexp.MustCompile(" +\r").ReplaceAllString(arg1.Content, "\n")
+
+	if err != nil {
+		fmt.Println(out)
+		return err
+	}
+
+	return nil
+}
+
+func InitializeScenario(ctx *godog.ScenarioContext) {
+	tr := TestRunner{}
+
+	if err := exec.Command("go", "build", ".").Run(); err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	//defer func() {
+	//	err := os.Remove("invowk")
+	//	if err != nil {
+	//		fmt.Println("Couldn't remove the compiled 'invowk' binary")
+	//	}
+	//}()
+
+	ctx.Step(`^an open TTY$`, tr.anOpenTTY)
+	ctx.Step(`^I successfully run "([^"]*)"$`, tr.iSuccessfullyRun)
+	ctx.Step(`^the terminal output should contain:$`, tr.theTerminalOutputShouldContain)
+	ctx.Step(`^the TUI output should contain the content from "([^"]*)", which renders to:$`, tr.theTUIOutputShouldContainTheContentFromWhichRendersTo)
+
+	if tr.console != nil {
+		defer tr.console.Close()
+	}
+}
+
+func TestFeatures(t *testing.T) {
+	suite := godog.TestSuite{
+		ScenarioInitializer: InitializeScenario,
+		Options: &godog.Options{
+			Format:   "pretty",
+			Paths:    []string{"features"},
+			TestingT: t, // Testing instance that will run subtests.
+		},
+	}
+
+	if suite.Run() != 0 {
+		t.Fatal("non-zero status returned, failed to run feature tests")
+	}
+}

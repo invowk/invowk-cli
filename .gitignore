@@ -19,3 +19,14 @@
 
 # Go workspace file
 go.work
+
+# MacOS
+**/.DS_Store
+**/._*
+
+# IDE
+.idea
+
+# Binaries
+invowk
+gotty

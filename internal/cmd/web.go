@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"fmt"
-	browser "github.com/cominotti/invowk/internal/wui"
+	browser "github.com/invowk/invowk-cli/internal/wui"
 	"github.com/spf13/cobra"
 )
 

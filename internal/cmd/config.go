@@ -1,13 +1,12 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"database/sql"
 	"fmt"
-	"github.com/cominotti/invowk/internal/tui/server"
+	"github.com/invowk/invowk-cli/internal/tui/server"
 	"github.com/spf13/cobra"
 	"log"
 	"os/exec"

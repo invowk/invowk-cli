@@ -1,12 +1,11 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"errors"
-	"github.com/cominotti/invowk/internal/issue"
+	"github.com/invowk/invowk-cli/internal/issue"
 	"github.com/spf13/cobra"
 )
 

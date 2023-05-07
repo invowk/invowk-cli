@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	. "github.com/cominotti/invowk/internal/type"
 	"github.com/dop251/goja"
+	. "github.com/invowk/invowk-cli/internal/type"
 	"log"
 )
 

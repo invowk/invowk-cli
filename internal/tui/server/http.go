@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/cominotti/invowk/internal/issue"
-	"github.com/cominotti/invowk/internal/tui/bubble/textinput"
 	"github.com/gin-gonic/gin"
+	"github.com/invowk/invowk-cli/internal/issue"
+	"github.com/invowk/invowk-cli/internal/tui/bubble/textinput"
 	"net/http"
 )
 

@@ -1,11 +1,10 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"github.com/cominotti/invowk/internal/tui/bubble/textinput"
+	"github.com/invowk/invowk-cli/internal/tui/bubble/textinput"
 	"github.com/spf13/cobra"
 )
 

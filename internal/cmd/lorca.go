@@ -1,11 +1,10 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"github.com/cominotti/invowk/internal/web/lorca"
+	"github.com/cominotti/invowk/internal/wui/lorca"
 	"github.com/spf13/cobra"
 )
 

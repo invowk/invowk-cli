@@ -1,12 +1,11 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
-	browser "github.com/cominotti/invowk/internal/web"
+	browser "github.com/cominotti/invowk/internal/wui"
 	"github.com/spf13/cobra"
 )
 

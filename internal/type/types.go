@@ -14,6 +14,15 @@ func (v PromptText) Check() []error {
 	return translateError("", validate.Var(v, "required,min=1,max=80"), &translator)
 }
 
+func (v PromptText) Validate() error {
+	errs := v.Check()
+	if errs != nil {
+		return errs[0]
+	} else {
+		return nil
+	}
+}
+
 func (v PromptText) Value() PromptText {
 	return v
 }

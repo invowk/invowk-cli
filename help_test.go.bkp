@@ -59,20 +59,20 @@ type TestRunner struct {
 }
 
 func (t *TestRunner) anOpenTTY() error {
-	c, err := expect.NewConsole(expect.WithStdout(os.Stdout))
-	if err != nil {
-		return err
-	}
-
-	t.console = c
+	//c, err := expect.NewConsole(expect.WithStdout(os.Stdout))
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//t.console = c
 	return nil
 }
 
 func (t *TestRunner) iSuccessfullyRun(arg1 string) error {
 	cmd := exec.Command("./invowk", arg1)
-	cmd.Stdin = t.console.Tty()
-	cmd.Stdout = t.console.Tty()
-	cmd.Stderr = t.console.Tty()
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
 
 	err := cmd.Start()
 	if err != nil {

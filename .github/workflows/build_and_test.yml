@@ -13,7 +13,11 @@ on:
 jobs:
 
   build:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        platform: [ ubuntu-22.04, macos-13, windows-2022 ]
+
+    runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v3
 

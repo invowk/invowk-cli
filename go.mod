@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/PandaManPMC/lorca-gui v0.1.12
 	github.com/charmbracelet/bubbles v0.15.0
-	github.com/charmbracelet/bubbletea v0.23.2
+	github.com/charmbracelet/bubbletea v0.24.0
 	github.com/charmbracelet/glamour v0.6.0
 	github.com/charmbracelet/lipgloss v0.7.1
 	github.com/dop251/goja v0.0.0-20230427124612-428fc442ff5f
@@ -29,7 +29,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bytedance/sonic v1.8.8 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
-	github.com/containerd/console v1.0.3 // indirect
+	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.9.0 // indirect

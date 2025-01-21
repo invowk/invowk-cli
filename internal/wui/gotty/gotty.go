@@ -17,7 +17,7 @@ func Main() {
 
 	backendOptions := &localcommand.Options{}
 
-	factory, err := localcommand.NewFactory("invowk", []string{"tui"}, backendOptions)
+	factory, err := localcommand.NewFactory("F:\\Repositories\\github\\invowk\\invowk-cli\\invowk.exe", []string{"tui"}, backendOptions)
 	if err != nil {
 		exit(err, 3)
 	}

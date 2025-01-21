@@ -1,41 +1,41 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/invowk/invowk-cli/internal/issue"
 	"github.com/invowk/invowk-cli/internal/tui/bubble/textinput"
 	"net/http"
 )
 
 type HttpTuiServer struct {
-	router *gin.Engine
+	router *http.ServeMux
 }
 
-func (server *HttpTuiServer) Start() {
+func (server *HttpTuiServer) Start() error {
 	go func() {
-		err := server.router.Run("localhost:8081")
-		issue.Handle(err, nil)
+		err := http.ListenAndServe(":8081", server.router)
+		if err != nil {
+			return
+		}
 	}()
 
 	for {
-		_, err := http.Get("http://localhost:8081/health")
+		_, err := http.Get("http://localhost:8081/invowk-tui/health")
 		if err == nil {
 			break
 		}
 	}
+	return nil
 }
 
 func NewHttpTuiServer() HttpTuiServer {
-	router := gin.Default()
-	router.GET("/bubble", func(context *gin.Context) {
+	router := http.NewServeMux()
+
+	router.HandleFunc("GET /invowk-tui/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	router.HandleFunc("GET /invowk-tui/bubble", func(w http.ResponseWriter, r *http.Request) {
 		textinput.Bubble()
 	})
 
-	router.GET("/health", func(context *gin.Context) {
-		context.Status(http.StatusOK)
-	})
-
-	return HttpTuiServer{
-		router: router,
-	}
+	return HttpTuiServer{router: router}
 }

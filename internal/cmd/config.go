@@ -9,9 +9,11 @@ import (
 	"github.com/invowk/invowk-cli/internal/tui/server"
 	"github.com/spf13/cobra"
 	"log"
+	sqlite "modernc.org/sqlite"
+	"os"
 	"os/exec"
 
-	sqlite "modernc.org/sqlite"
+	"github.com/charmbracelet/gum/choose"
 )
 
 // configCmd represents the config command
@@ -41,7 +43,13 @@ to quickly create a Cobra application.`,
 		router.Start()
 
 		fmt.Println("Calling run.sh")
-		cmd2 := exec.Command("./internal/cmd/run.sh")
+
+		//cmd2 := exec.Command("./internal/cmd/run.sh")
+		cmd2 := exec.Command("python", "F:\\Repositories\\github\\invowk\\invowk-cli\\sample.py")
+		cmd2.Stdout = os.Stdout
+		cmd2.Stderr = os.Stderr
+		//cmd2 := exec.Command("powershell", "F:\\Repositories\\github\\invowk\\invowk-cli\\invowk.ps1")
+
 		fmt.Println("Gonna check pid")
 		err := cmd2.Start()
 
@@ -53,6 +61,7 @@ to quickly create a Cobra application.`,
 		if err != nil {
 			log.Fatal(err)
 		}
+
 	},
 }
 
@@ -68,4 +77,9 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	options := choose.Options{}
+	if options.Ordered {
+
+	}
 }

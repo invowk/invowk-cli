@@ -17,14 +17,35 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/invowk/invowk-cli/internal/cmd"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println("graceful exit")
+			fmt.Println("graceful exit after")
 		}
 	}()
-	cmd.Execute()
+
+	app := &cli.App{
+		Name:  "invowk",
+		Usage: "A code/script execution & sharing engine exposed as an user-extensible CLI",
+		Commands: []*cli.Command{
+			cmd.WebCommand(),
+			cmd.TuiCommand(),
+			cmd.PrettyMdCommand(),
+			cmd.LorcaCommand(),
+			cmd.HtermCommand(),
+			cmd.ConfigCommand(),
+			cmd.RunDynCommand(),
+		},
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

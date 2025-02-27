@@ -5,34 +5,17 @@ package cmd
 
 import (
 	"github.com/invowk/invowk-cli/internal/wui/lorca"
-	"github.com/spf13/cobra"
+	"github.com/urfave/cli/v2"
 )
 
-// lorcaCmd represents the config command
-var lorcaCmd = &cobra.Command{
-	Use:   "lorca",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		lorca.Render()
-	},
-}
-
-func init() {
-	rootCmd.AddCommand(lorcaCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// lorcaCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// lorcaCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// LorcaCommand represents the lorca command
+func LorcaCommand() *cli.Command {
+	return &cli.Command{
+		Name:  "lorca",
+		Usage: "A brief description of your command",
+		Action: func(c *cli.Context) error {
+			lorca.Render()
+			return nil
+		},
+	}
 }
